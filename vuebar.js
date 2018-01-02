@@ -505,7 +505,7 @@
 
             // dragger enabled?
             var elNativeScrollbarWidth = getNativeScrollbarWidth(el.firstElementChild);
-            var overlayScrollbar = elNativeScrollbarWidth == 0;
+            var overlayScrollbar = elNativeScrollbarWidth === 0;
             state.draggerEnabled = ( (!overlayScrollbar) || state.config.overrideFloatingScrollbar ) ? 1 : 0;
 
             // setup scrollbar "state"
@@ -537,29 +537,13 @@
             state.el2.style.overflowY = 'scroll';
             state.el2.style.height = '100%';
 
+            if (elNativeScrollbarWidth === 0) {
+              elNativeScrollbarWidth = 20
+            }
+
             // do the magic
             if (state.draggerEnabled) {
-
-                // hide original browser scrollbar using pseudo css selectors (only chrome & safari)
-                if ( state.config.useScrollbarPseudo && (browser.chrome || browser.safari) ) {
-                    state.el2.style.width = '100%';
-                    hideScrollbarUsingPseudoElement(el);
-                }
-
-                // hide original browser overlay scrollbar and add padding to compensate for that
-                else if (overlayScrollbar) {
-                    /* state.el2.style.width = 'calc(100% + ' + 20 + 'px)';
-                    compatStyle(state.el2, 'BoxSizing', 'border-box'); */
-                    state.el2.style.width = '100%';
-                    compatStyle(state.el2, 'BoxSizing', 'content-box');
-                    state.el2.style.paddingRight = '20px';
-                }
-
-                // hide original browser scrollbar behind element edges and hidden overflow
-                else {
-                    state.el2.style.width = 'calc(100% + ' + elNativeScrollbarWidth + 'px)';
-                }
-
+                state.el2.style.width = 'calc(100% + ' + elNativeScrollbarWidth + 'px)';
             }
 
             // add events
